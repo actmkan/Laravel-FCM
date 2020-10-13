@@ -37,6 +37,13 @@ class PayloadNotificationBuilder
      *
      * @var null|string
      */
+    protected $imageUrl;
+
+    /**
+     * @internal
+     *
+     * @var null|string
+     */
     protected $sound;
 
     /**
@@ -166,6 +173,21 @@ class PayloadNotificationBuilder
     public function setIcon($icon)
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * Indicates the image that can be displayed in the notification
+     * Supports an url or internal image.
+     *
+     * @param string $imageUrl
+     *
+     * @return PayloadNotificationBuilder current instance of the builder
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
@@ -343,6 +365,16 @@ class PayloadNotificationBuilder
     public function getIcon()
     {
         return $this->icon;
+    }
+
+    /**
+     * Get ImageUrl.
+     *
+     * @return null|string
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
     }
 
     /**
