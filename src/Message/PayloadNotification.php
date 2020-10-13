@@ -42,7 +42,7 @@ class PayloadNotification implements Arrayable
      *
      * @var null|string
      */
-    protected $image;
+    protected $imageUrl;
 
     /**
      * @internal
@@ -143,6 +143,7 @@ class PayloadNotification implements Arrayable
             'android_channel_id' => $this->channelId,
             'icon' => $this->icon,
             'imageUrl' => $this->imageUrl,
+            'image' => $this->imageUrl,
             'sound' => $this->sound,
             'badge' => $this->badge,
             'tag' => $this->tag,
