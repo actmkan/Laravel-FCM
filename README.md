@@ -1,7 +1,10 @@
-# Laravel-FCM
+# Laravel-FCM (maintained version of the official repository)
 
-[![Build Status](https://travis-ci.org/brozot/Laravel-FCM.svg?branch=master)](https://travis-ci.org/brozot/Laravel-FCM) [![Coverage Status](https://coveralls.io/repos/github/brozot/Laravel-FCM/badge.svg?branch=master)](https://coveralls.io/github/brozot/Laravel-FCM?branch=master) [![Latest Stable Version](https://poser.pugx.org/brozot/laravel-fcm/v/stable)](https://packagist.org/packages/brozot/laravel-fcm) [![Total Downloads](https://poser.pugx.org/brozot/laravel-fcm/downloads)](https://packagist.org/packages/brozot/laravel-fcm)
-[![License](https://poser.pugx.org/brozot/laravel-fcm/license)](https://packagist.org/packages/brozot/laravel-fcm)
+![Run tests](https://github.com/code-lts/Laravel-FCM/workflows/Run%20tests/badge.svg?branch=main)
+[![Coverage Status](https://codecov.io/gh/code-lts/laravel-fcm/branch/main/graph/badge.svg)](https://codecov.io/gh/code-lts/laravel-fcm)
+[![Latest Stable Version](https://poser.pugx.org/code-lts/laravel-fcm/v/stable)](https://packagist.org/packages/code-lts/laravel-fcm)
+[![Total Downloads](https://poser.pugx.org/code-lts/laravel-fcm/downloads)](https://packagist.org/packages/code-lts/laravel-fcm)
+[![License](https://poser.pugx.org/code-lts/laravel-fcm/license)](https://packagist.org/packages/code-lts/laravel-fcm)
 
 ## Introduction
 
@@ -20,17 +23,17 @@ It currently **only supports HTTP protocol** for :
 
 To get the latest version of Laravel-FCM on your project, require it from "composer":
 
-
-	$ composer require brozot/laravel-fcm
-
+```sh
+composer require code-lts/laravel-fcm
+```
 
 Or you can add it directly in your composer.json file:
 
 ```json
 {
-    "require": {
-        "brozot/laravel-fcm": "1.3.*"
-    }
+	"require": {
+		"code-lts/laravel-fcm": "1.6.*"
+	}
 }
 ```
 
@@ -63,9 +66,9 @@ Add the facade aliases in the same file:
 
 Publish the package config file using the following command:
 
-
-	$ php artisan vendor:publish --provider="LaravelFCM\FCMServiceProvider"
-
+```sh
+$ php artisan vendor:publish --provider="LaravelFCM\FCMServiceProvider"
+```
 
 ### Lumen
 
@@ -84,7 +87,7 @@ class_alias(\LaravelFCM\Facades\FCM::class, 'FCM');
 class_alias(\LaravelFCM\Facades\FCMGroup::class, 'FCMGroup');
 ```
 
-Copy the config file ```fcm.php``` manually from the directory ```/vendor/brozot/laravel-fcm/config``` to the directory ```/config ``` (you may need to create this directory).
+Copy the config file ```fcm.php``` manually from the directory ```/vendor/code-lts/laravel-fcm/config``` to the directory ```/config ``` (you may need to create this directory).
 
 
 ### Package Configuration
@@ -132,7 +135,7 @@ $optionBuilder->setTimeToLive(60*20);
 
 $notificationBuilder = new PayloadNotificationBuilder('my title');
 $notificationBuilder->setBody('Hello world')
-				    ->setSound('default');
+					->setSound('default');
 
 $dataBuilder = new PayloadDataBuilder();
 $dataBuilder->addData(['a_data' => 'my_data']);
@@ -170,7 +173,7 @@ $optionBuilder->setTimeToLive(60*20);
 
 $notificationBuilder = new PayloadNotificationBuilder('my title');
 $notificationBuilder->setBody('Hello world')
-				    ->setSound('default');
+					->setSound('default');
 
 $dataBuilder = new PayloadDataBuilder();
 $dataBuilder->addData(['a_data' => 'my_data']);
@@ -220,7 +223,7 @@ use LaravelFCM\Message\Topics;
 ```php
 $notificationBuilder = new PayloadNotificationBuilder('my title');
 $notificationBuilder->setBody('Hello world')
-				    ->setSound('default');
+					->setSound('default');
 
 $notification = $notificationBuilder->build();
 
@@ -246,7 +249,7 @@ It sends notification to devices registered at the following topics:
 ```php
 $notificationBuilder = new PayloadNotificationBuilder('my title');
 $notificationBuilder->setBody('Hello world')
-				    ->setSound('default');
+					->setSound('default');
 
 $notification = $notificationBuilder->build();
 
@@ -265,20 +268,46 @@ $topicResponse->error());
 
 ```
 
+#### Creating a Topic
+
+```php
+$token = 'device_id';
+$topic_id = 'unique_topic_id'; //unique topic id.
+// Save notification key in your database you must use it to send messages or for managing this group
+$notification_key = FCMTopic::createTopic($topic_id, $token);
+```
+
+#### Subscribe to a Topic
+
+```php
+$recipients_tokens = ['device_id', '...'];
+$topic_id = 'unique_topic_id';
+$key = FCMTopic::subscribeTopic($topic_id, $recipients_tokens);
+```
+
+#### UnSubscribe to a Topic
+
+```php
+$recipients_tokens = ['device_id', '...'];
+$topic_id = 'unique_topic_id';
+$key = FCMTopic::unsubscribeTopic($topic_id, $recipients_tokens);
+```
+
+
 ### Group Messages
 
 #### Sending a Notification to a Group
 
 ```php
-$notificationKey = ['a_notification_key'];
 
 
 $notificationBuilder = new PayloadNotificationBuilder('my title');
 $notificationBuilder->setBody('Hello world')
-                        ->setSound('default');
+						->setSound('default');
 
 $notification = $notificationBuilder->build();
 
+$notificationKey = ['a_notification_key'];
 
 $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, null);
 
@@ -332,7 +361,7 @@ You can construct an option as follows:
 $optionsBuilder = new OptionsBuilder();
 
 $optionsBuilder->setTimeToLive(42*60)
-                ->setCollapseKey('a_collapse_key');
+				->setCollapseKey('a_collapse_key');
 
 $options = $optionsBuilder->build();
 ```
@@ -352,9 +381,9 @@ See the [official documentation](https://firebase.google.com/docs/cloud-messagin
 ```php
 $notificationBuilder = new PayloadNotificationBuilder();
 $notificationBuilder->setTitle('title')
-            		->setBody('body')
-            		->setSound('sound')
-            		->setBadge('badge');
+					->setBody('body')
+					->setSound('sound')
+					->setBadge('badge');
 
 $notification = $notificationBuilder->build();
 ```
@@ -400,11 +429,18 @@ For topics message, Laravel-FCM offers an easy to use api which abstract firebas
 $topics = new Topics();
 
 $topics->topic('TopicA')
-       ->andTopic(function($condition) {
-	       $condition->topic('TopicB')->orTopic('TopicC');
-       });
+	   ->andTopic(function($condition) {
+		   $condition->topic('TopicB')->orTopic('TopicC');
+	   });
 ```
 
+## Validating
+
+### Validate FCM Token
+
+```php
+$isValid = FCMValidator::validateToken($token);
+```
 
 ## Testing
 
@@ -419,8 +455,8 @@ There are 3 kinds of "MockResponse" given by the package:
 You can mock the FCM call as in the following example:
 
 ```php
-$numberSucess = 2;
-$mockResponse = new \LaravelFCM\Mocks\MockDownstreamResponse(numberSucess);
+$numberSuccess = 2;
+$mockResponse = new \LaravelFCM\Mocks\MockDownstreamResponse($numberSuccess);
 
 $mockResponse->addTokenToDelete('token_to_delete');
 $mockResponse->addTokenToModify('token_to_modify', 'token_modified');
@@ -436,7 +472,7 @@ $this->app->singleton('fcm.sender', function($app) use($sender) {
 
 ## API Documentation
 
-You can find more documentation about the API in the [API reference](./doc/Readme.md).
+You can find more documentation about the API in the [API reference](./doc/index.md).
 
 
 ## Licence

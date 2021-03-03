@@ -5,10 +5,7 @@ use LaravelFCM\Response\DownstreamResponse;
 
 class DownstreamResponseTest extends FCMTestCase
 {
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_success()
+    public function testItConstructAResponseWith_a_success()
     {
         $token = 'new_token';
 
@@ -22,7 +19,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(1, $downstreamResponse->numberSuccess());
         $this->assertEquals(0, $downstreamResponse->numberFailure());
@@ -32,10 +32,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertCount(0, $downstreamResponse->tokensToModify());
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_multiple_successes()
+    public function testItConstructAResponseWith_multiple_successes()
     {
         $tokens = [
             'first_token',
@@ -55,7 +52,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
 
         $this->assertEquals(3, $downstreamResponse->numberSuccess());
         $this->assertEquals(0, $downstreamResponse->numberFailure());
@@ -65,10 +65,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertCount(0, $downstreamResponse->tokensToModify());
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_failure()
+    public function testItConstructAResponseWith_a_failure()
     {
         $token = 'new_token';
 
@@ -82,7 +79,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(1, $downstreamResponse->numberFailure());
@@ -94,10 +94,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertCount(0, $downstreamResponse->tokensToModify());
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_multiple_failures()
+    public function testItConstructAResponseWith_multiple_failures()
     {
         $tokens = [
             'first_token',
@@ -119,7 +116,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(3, $downstreamResponse->numberFailure());
@@ -133,10 +133,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertCount(0, $downstreamResponse->tokensToModify());
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_token_to_change()
+    public function testItConstructAResponseWith_a_token_to_change()
     {
         $token = 'new_token';
 
@@ -150,7 +147,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(0, $downstreamResponse->numberFailure());
@@ -163,10 +163,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals('32', $downstreamResponse->tokensToModify()[ $token ]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_multiple_tokens_to_change()
+    public function testItConstructAResponseWith_multiple_tokens_to_change()
     {
         $tokens = [
             'first_token',
@@ -186,7 +183,10 @@ class DownstreamResponseTest extends FCMTestCase
                             ]
 						}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(0, $downstreamResponse->numberFailure());
@@ -205,14 +205,11 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals('34', $downstreamResponse->tokensToModify()[ $tokens[ 2 ] ]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_token_unavailable()
+    public function testItConstructAResponseWith_a_token_unavailable()
     {
         $token = 'first_token';
 
-        $response = new Response(200, [], '{ 
+        $response = new Response(200, [], '{
 						  "multicast_id": 216,
 						  "success": 0,
 						  "failure": 1,
@@ -222,7 +219,10 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(1, $downstreamResponse->numberFailure());
@@ -236,14 +236,11 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals($token, $downstreamResponse->tokensToRetry()[0]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_token_server_error()
+    public function testItConstructAResponseWith_a_token_server_error()
     {
         $token = 'first_token';
 
-        $response = new Response(200, [], '{ 
+        $response = new Response(200, [], '{
 						  "multicast_id": 216,
 						  "success": 0,
 						  "failure": 1,
@@ -253,7 +250,10 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(1, $downstreamResponse->numberFailure());
@@ -267,14 +267,11 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals($token, $downstreamResponse->tokensToRetry()[0]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_token_exceeded()
+    public function testItConstructAResponseWith_a_token_exceeded()
     {
         $token = 'first_token';
 
-        $response = new Response(200, [], '{ 
+        $response = new Response(200, [], '{
 						  "multicast_id": 216,
 						  "success": 0,
 						  "failure": 1,
@@ -284,7 +281,10 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $token);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $token, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(1, $downstreamResponse->numberFailure());
@@ -298,10 +298,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals($token, $downstreamResponse->tokensToRetry()[0]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_a_mixed_token_to_retry()
+    public function testItConstructAResponseWith_a_mixed_token_to_retry()
     {
         $tokens = [
             'first_token',
@@ -327,7 +324,10 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
 
         $this->assertEquals(0, $downstreamResponse->numberSuccess());
         $this->assertEquals(6, $downstreamResponse->numberFailure());
@@ -346,10 +346,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals($tokens[ 5 ], $downstreamResponse->tokensToRetry()[ 5 ]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_mixed_response()
+    public function testItConstructAResponseWith_mixed_response()
     {
         $tokens = [
             'first_token',
@@ -360,7 +357,7 @@ class DownstreamResponseTest extends FCMTestCase
             'sixth_token',
         ];
 
-        $response = new Response(200, [], '{ 
+        $response = new Response(200, [], '{
 						  "multicast_id": 216,
 						  "success": 3,
 						  "failure": 3,
@@ -375,7 +372,10 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
 
         $this->assertEquals(3, $downstreamResponse->numberSuccess());
         $this->assertEquals(3, $downstreamResponse->numberFailure());
@@ -392,10 +392,7 @@ class DownstreamResponseTest extends FCMTestCase
         $this->assertEquals('32', $downstreamResponse->tokensToModify()[ $tokens[ 4 ] ]);
     }
 
-    /**
-     * @test
-     */
-    public function it_construct_a_response_with_multiples_response()
+    public function testItConstructAResponseWith_multiples_response()
     {
         $tokens = [
             'first_token',
@@ -417,7 +414,7 @@ class DownstreamResponseTest extends FCMTestCase
             'seventh_1_token',
         ];
 
-        $response = new Response(200, [], '{ 
+        $response = new Response(200, [], '{
 						  "multicast_id": 216,
 						  "success": 3,
 						  "failure": 3,
@@ -433,8 +430,11 @@ class DownstreamResponseTest extends FCMTestCase
 	                      ]
 					}');
 
-        $downstreamResponse = new DownstreamResponse($response, $tokens);
-        $downstreamResponse1 = new DownstreamResponse($response, $tokens1);
+        $logger = new \Monolog\Logger('test');
+        $logger->pushHandler(new \Monolog\Handler\NullHandler());
+
+        $downstreamResponse = new DownstreamResponse($response, $tokens, $logger);
+        $downstreamResponse1 = new DownstreamResponse($response, $tokens1, $logger);
 
         $downstreamResponse->merge($downstreamResponse1);
 
